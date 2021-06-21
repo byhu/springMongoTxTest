@@ -41,12 +41,12 @@ public class TxApplication implements CommandLineRunner {
         var txo = TransactionalOperator.create(new ReactiveMongoTransactionManager(factory), new DefaultTransactionDefinition());
 
         // test cases
-//        flux(txo);      // failed
+        flux(txo);      // failed
 //        monoZip(txo); // failed
 //        fluxO(txo);   // failed, if you run multiple times, you will see 1 or 2 records of A1 inserted.
 
 //        recursive(txo, 0).block(); // success
-        mono(txo);        // success
+//        mono(txo);        // success
 //        monoConcat(txo);  // success
     }
 
