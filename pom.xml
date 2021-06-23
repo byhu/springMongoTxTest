@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>txtest</groupId>
-	<artifactId>txtest</artifactId>
+	<artifactId>springMongoTxTest</artifactId>
 	<version>1.0.0</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.10.RELEASE</version>
+		<version>2.5.1</version>
 		<relativePath/>
 	</parent>
 
@@ -41,33 +41,35 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
-	<!--    <dependencyManagement>-->
-	<!--        <dependencies>-->
-	<!--            <dependency>-->
-	<!--                <groupId>org.springframework.cloud</groupId>-->
-	<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
-	<!--                <version>${spring-cloud.version}</version>-->
-	<!--                <type>pom</type>-->
-	<!--                <scope>import</scope>-->
-	<!--            </dependency>-->
-	<!--        </dependencies>-->
-	<!--    </dependencyManagement>-->
 
 	<build>
 		<resources>
 			<resource>
-				<directory>resource</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<testResources>
 			<testResource>
-				<directory>test-resource</directory>
+				<directory>src/test/resources</directory>
 			</testResource>
 		</testResources>
-		<testSourceDirectory>test</testSourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
