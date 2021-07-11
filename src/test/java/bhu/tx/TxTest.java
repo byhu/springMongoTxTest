@@ -2,6 +2,7 @@ package bhu.tx;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,6 +32,25 @@ public class TxTest {
         mongo.findAllAndRemove(query(where("id").exists(true)), A.class, col + "0")
                 .then(mongo.remove(query(where("id").exists(true)), A.class, col + "1"))
                 .block();
+    }
+
+    Mono<Void> saveNoError(List<Integer> is, String col) {
+        LoggerFactory.getLogger(getClass()).info("batch " + is.get(0));
+        return Flux.fromIterable(is).flatMap(i -> {
+            var d0 = new A(i, "a1 " + i);
+            var d1 = new A(i, "a2 " + i);
+            return mongo.save(d0, col + "0")
+                    .then(mongo.save(d1, col + "1"));
+        }).then();
+    }
+
+    @Test
+    public void noSuchTransaction() {
+        cleanup("noSuchTransaction");
+        Flux.range(0, 10)
+                .buffer(2)
+                .flatMap(is -> txo.transactional(saveNoError(is, "noSuchTransaction")))
+                .blockLast();
     }
 
     Mono<A> save(int i, String col) {
