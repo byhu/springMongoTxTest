@@ -47,10 +47,29 @@ public class TxTest {
     @Test
     public void noSuchTransaction() {
         cleanup("noSuchTransaction");
-        Flux.range(0, 10)
-                .buffer(2)
+        Flux.range(0, 100)
+                .buffer(10)
                 .flatMap(is -> txo.transactional(saveNoError(is, "noSuchTransaction")))
                 .blockLast();
+    }
+
+    Mono<Void> noSuchTransactionRecursive(int i) {
+        if (i >= 10)
+            return Mono.empty();
+        return txo.transactional(saveNoError(IntStream.range(i * 10, i*10 + 10).boxed().collect(Collectors.toList()), "noSuchTransactionRecursive"))
+                .then(noSuchTransactionRecursive(i + 1));
+    }
+
+    @Test
+    public void noSuchTransactionRecursive() {
+        cleanup("noSuchTransactionRecursive");
+        try {
+            noSuchTransactionRecursive(0)
+                    .then(countEqual("noSuchTransactionRecursive")).block();
+        } catch (Exception e) {
+            System.out.println(e);
+            countEqual("recursive").block();
+        }
     }
 
     Mono<A> save(int i, String col) {
